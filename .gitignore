@@ -1,0 +1,51 @@
+# ===================================================================
+# POS Screensaver - Git Ignore Configuration
+# ===================================================================
+
+# --- Android Build & Intermediate Files ---
+.gradle/
+**/build/
+android_screensaver_app/.gradle/
+android_screensaver_app/build/
+android_screensaver_app/*/build/
+android_screensaver_app/.cxx/
+android_screensaver_app/captures/
+
+# Local Android SDK configuration
+local.properties
+**/local.properties
+
+# Android Studio / IntelliJ IDE files
+.idea/
+**/.idea/
+*.iml
+**/*.iml
+.navigation/
+
+# --- Gradle Distributions & Heavy Archives (>100MB blocked by GitHub) ---
+/gradle-8.5.zip
+/gradle/gradle-8.5/
+*.rar
+*.zip
+*.7z
+*.tar.gz
+!android_screensaver_app/gradle/wrapper/gradle-wrapper.jar
+
+# --- Binaries & Executables ---
+tools/ffmpeg.exe
+*.exe
+
+# --- Video Ads & Raw Media Folders (Root Level) ---
+/Ads/
+/Input_Ads_Here/
+/Optimized_Ads_For_Kiosk/
+/*.mp4
+/*.mov
+/*.avi
+/*.mkv
+
+# --- System & Editor Temporary Files ---
+.DS_Store
+Thumbs.db
+*.log
+*.tmp

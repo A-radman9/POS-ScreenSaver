@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Self-Checkout POS Kiosk with Integrated Ad Screensaver">
+  <title>Self-Service POS Kiosk & Screensaver</title>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="pos-app.css">
+  <link rel="stylesheet" href="pos-screensaver.css">
+</head>
+<body>
+
+  <!-- KIOSK VIEWPORT WRAPPER (Optimized for FY-3576SE 1080x1920 Portrait Display) -->
+  <div class="kiosk-viewport-wrapper">
+    
+    <!-- KIOSK HEADER -->
+    <header class="pos-header">
+      <div class="pos-brand">
+        <div class="pos-brand-logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+        </div>
+        <div class="pos-brand-info">
+          <h1 id="pos-brand-title">الدفع السريع الذاتي</h1>
+          <p id="pos-brand-subtitle">محطة الخدمة الذاتية رقم ٠٤</p>
+        </div>
+      </div>
+
+      <div class="pos-header-actions">
+        <button type="button" class="btn-lang" id="btn-lang-toggle">🌐 English</button>
+      </div>
+    </header>
+
+    <!-- CONTENT GRID -->
+    <div class="pos-content-grid">
+      
+      <!-- SCANNER & IDLE BANNER -->
+      <div class="pos-scan-banner">
+        <div class="scan-prompt">
+          <span class="scan-pulse-icon"></span>
+          <span id="pos-scan-text">مرر الباركود من الماسح أو اختر من الشاشة</span>
+        </div>
+        <div class="idle-countdown-badge">
+          <span id="pos-idle-label">شاشة التوقف بعد: </span>
+          <strong id="pos-idle-seconds">60s</strong>
+        </div>
+      </div>
+
+      <!-- CATALOG SECTION -->
+      <section class="pos-catalog-section">
+        <div class="section-title">
+          <span id="pos-catalog-heading">المنتجات المختارة</span>
+          <span class="device-badge-tag">FY-3576SE • Android 14</span>
+        </div>
+
+        <div class="product-cards-grid" id="pos-products-grid">
+          <!-- Populated dynamically via pos-app.js -->
+        </div>
+      </section>
+
+      <!-- CART & CHECKOUT SHEET -->
+      <footer class="pos-cart-panel">
+        <div class="cart-header">
+          <div class="cart-title">
+            <span id="pos-cart-heading">سلة المشتريات</span>
+            <span class="cart-count-badge" id="pos-cart-count">0</span>
+          </div>
+          <button type="button" class="btn-clear-cart" id="pos-clear-cart-btn">إفراغ السلة</button>
+        </div>
+
+        <div class="cart-items-list" id="pos-cart-items">
+          <!-- Populated dynamically via pos-app.js -->
+        </div>
+
+        <div class="cart-summary-row">
+          <span class="cart-total-label" id="pos-total-label">الإجمالي المطلوب:</span>
+          <span class="cart-total-value" id="pos-cart-total">ر.س 0.00</span>
+        </div>
+
+        <button type="button" class="btn-pay-now" id="pos-pay-btn" disabled>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+          </svg>
+          <span id="pos-pay-btn-text">الدفع وطباعة الفاتورة</span>
+        </button>
+      </footer>
+
+    </div>
+
+    <!-- PAYMENT SUCCESS MODAL -->
+    <div class="pos-modal-backdrop" id="pos-checkout-modal">
+      <div class="pos-modal-card">
+        <div class="success-icon-box">✓</div>
+        <h2 id="modal-title" style="font-size: 1.4rem; margin-bottom: 8px;">تم الدفع بنجاح!</h2>
+        <p id="modal-desc" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.4;">
+          شكراً لتسوقكم معنا. يرجى استلام الإيصال من فتحة الطابعة بالأسفل.
+        </p>
+        <div class="receipt-cut-line"></div>
+        <button type="button" class="btn-pay-now" id="modal-btn-done" style="margin-top: 10px;">
+          عميل جديد
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- KIOSK CONTROL & TEST DIAGNOSTIC PANEL -->
+  <aside class="kiosk-diagnostic-panel" id="kiosk-diag-panel">
+    <div class="diag-header" id="diag-panel-header" title="Click to minimize/expand">
+      <div class="diag-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+        <span>Kiosk & Screensaver Controls</span>
+      </div>
+      <span style="font-size: 0.75rem; opacity: 0.7;">▼ / ▲</span>
+    </div>
+
+    <div class="diag-group">
+      <label>Hardware Target:</label>
+      <div style="font-size: 0.75rem; color: #38bdf8;">FY-3576SE • RK3576 • 1080x1920 (Portrait)</div>
+    </div>
+
+    <div class="diag-group">
+      <label for="diag-timeout-slider">Idle Timeout (For Testing): <strong id="diag-timeout-val" style="color: #ff9800;">60s</strong></label>
+      <div class="diag-slider-wrap">
+        <input type="range" id="diag-timeout-slider" min="5" max="120" step="5" value="60">
+      </div>
+      <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">Set to 5s to quickly preview screensaver activation.</div>
+    </div>
+
+    <div class="diag-group">
+      <button type="button" class="btn-trigger-screensaver" id="btn-force-screensaver">
+        ▶ Activate Screensaver Now
+      </button>
+    </div>
+
+    <div class="diag-group">
+      <label for="diag-custom-file">Add Your Own Ad (Image or Video):</label>
+      <input type="file" id="diag-custom-file" accept="image/*,video/*" style="font-size: 0.75rem; width: 100%; color: #94a3b8;">
+    </div>
+  </aside>
+
+  <!-- JAVASCRIPT LIBS & APP CODE -->
+  <script src="pos-screensaver.js"></script>
+  <script src="pos-app.js"></script>
+</body>
+</html>

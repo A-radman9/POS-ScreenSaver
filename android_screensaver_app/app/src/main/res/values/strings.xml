@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">POS Ad Screensaver</string>
+    <string name="touch_prompt">المس الشاشة للبدء\nTouch Screen to Start</string>
+    <string name="accessibility_service_description">Monitors barcode scanner keystrokes and customer checkout activity so the ad screensaver never interrupts customers while scanning products.</string>
+</resources>
